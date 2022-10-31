@@ -1010,8 +1010,11 @@ if($data['servicios']['estado']=="Inactivo"){
             }
 			
 			$row[] = '<span class="st-' . $ticket->status . '">' . $ticket->status . '</span>';
-            $row[] = '<a href="' . base_url('tickets/thread/?id=' . $ticket->idt) . '" class="btn btn-success btn-xs"><i class="icon-file-text"></i> ' . $this->lang->line('View') . '</a> ';
-
+            $row[] = '<a href="' . base_url('tickets/thread/?id=' . $ticket->idt) . '" class="btn btn-success btn-xs"><i class="icon-file-text"></i></a> ';
+			if ($this->aauth->get_user()->roleid >= 3) {
+			$row[] ='<a href="' . base_url('quote/edit/?id=' . $ticket->idt) . '" class="btn btn-primary btn-xs"><i class="icon-pencil"></i> </a>';}
+			if ($this->aauth->get_user()->roleid == 5) {
+			$row[] =	'<a class="btn btn-danger btn-xs" onclick="eliminar_ticket('.$ticket->idt.')" > <i class="icon-trash-o"></i> </a>';}
             
 
             $data[] = $row;
@@ -1390,7 +1393,9 @@ if($data['servicios']['estado']=="Inactivo"){
                 $resivos_var='';
             }
             $row[] = '<a  href="' . base_url("invoices/view?id=$invoices->tid") . '" class="btn btn-success btn-xs"><i class="icon-file-text"></i> '.$this->lang->line('View').'</a> &nbsp; '.$resivos_var.'&nbsp;&nbsp;';
+			if ($this->aauth->get_user()->roleid == 5) {
 			$row[] = '<a href="#" data-object-id="' . $invoices->tid . '" class="btn btn-danger btn-xs delete-object"><span class="icon-trash"></span></a>';
+			}
             $data[] = $row;
         }
 		
@@ -1565,7 +1570,7 @@ if($data['servicios']['estado']=="Inactivo"){
 		$this->load->model('invoices_model', 'invocies');
         $data['details'] = $this->customers->details($custid);
         $data['money'] = $this->customers->money_details($custid);
-		$data['paquete'] = $this->invocies->paquetes();
+		$data['paquete'] = $this->invocies->paquetes('tv');
         $head['usernm'] = $this->aauth->get_user()->username;
 		$data['invoice'] = $this->customers->invoice_details($custid, $this->limited);
         $head['title'] = 'View Customer Invoices';
